@@ -1,11 +1,14 @@
 from flask import Flask, render_template, flash, request, url_for, redirect, session
 from content_management import Content
 from dbconnect import connection
-from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from wtforms import Form, BooleanField, TextField, PasswordField, validators, RadioField
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 from functools import wraps
 import gc
+from flask_wtf import FlaskForm
+
+
 
 TOPIC_DICT = Content()
 
@@ -86,7 +89,8 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice (updated Jan 22, 2015)', [validators.DataRequired()])
+    role_id=RadioField('Label',choices=[('1','Dental Clinic'),('2','Dental Lab'),('3','Manufacturer')])
+    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice (updated Jan 21, 2015)', [validators.DataRequired()])
     
 
 @app.route('/register/', methods=["GET","POST"])
@@ -98,6 +102,7 @@ def register_page():
             username  = form.username.data
             email = form.email.data
             password = sha256_crypt.encrypt((str(form.password.data)))
+            role_id =  form.role_id.data
             c, conn = connection()
 
             x = c.execute("SELECT * FROM users WHERE username = (%s)",
@@ -110,8 +115,8 @@ def register_page():
             else:
                 # c.execute("INSERT INTO users (username, password, email, tracking) VALUES (%s, %s, %s, %s)",
                 #           (thwart(username), thwart(password), thwart(email), thwart("/introduction-to-python-programming/")))
-                c.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
-                           (thwart(username), thwart(password), thwart(email)))
+                c.execute("INSERT INTO users (username, password, email, role_id) VALUES (%s, %s, %s, %s)",
+                           (thwart(username), thwart(password), thwart(email), thwart(role_id)))
                 conn.commit()
                 flash("Thanks for registering!")
                 c.close()
