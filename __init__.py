@@ -27,6 +27,19 @@ def dashboard():
     # flash("asdfas asfsafs!!!!")
     return render_template("dashboard.html", TOPIC_DICT = TOPIC_DICT)
 
+@app.route('/clinic/')
+def clinic():
+    return render_template("clinic.html", TOPIC_DICT = TOPIC_DICT)
+
+@app.route('/lab/')
+def lab():
+    return render_template("lab.html", TOPIC_DICT = TOPIC_DICT)
+
+
+@app.route('/manufacturer/')
+def manufacturer():
+    return render_template("manufacturer.html", TOPIC_DICT = TOPIC_DICT)
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html")
@@ -57,20 +70,52 @@ def login_page():
         c, conn = connection()
         if request.method == "POST":
 
-            data = c.execute("SELECT * FROM users WHERE username = (%s)",
-                             thwart(request.form['username']))
+            # data = c.execute("SELECT * FROM users WHERE username = (%s)",
+            #                  thwart(request.form['username']))
             
-            data = c.fetchone()[3]
+            # data = c.fetchone()[3]
 
-            if sha256_crypt.verify(request.form['password'], data):
-                session['logged_in'] = True
-                session['username'] = request.form['username']
+            # if sha256_crypt.verify(request.form['password'], data):
+            #     session['logged_in'] = True
+            #     session['username'] = request.form['username']
 
-                flash("You are now logged in")
-                return redirect(url_for("dashboard"))
+            #     flash("You are now logged in")
+            #     # return redirect(url_for("dashboard"))
+            #     # return redirect(url_for("clinic"))
+            #     # return redirect(url_for("lab"))
+            #     return redirect(url_for("manufacturer"))
 
+            # else:
+            #     error = "Invalid credentials, try again."
+            #-----------------------------------------------------
+
+            if (c.execute("SELECT * FROM users WHERE username = (%s) AND role_id = ('1')",
+                              thwart(request.form['username']))):
+                data = c.fetchone()[3]
+                if sha256_crypt.verify(request.form['password'], data):
+                    session['logged_in'] = True
+                    session['username'] = request.form['username']
+                    flash("You are now logged in")
+                    return redirect(url_for("clinic"))
+            elif (c.execute("SELECT * FROM users WHERE username = (%s) AND role_id = ('2')",
+                              thwart(request.form['username']))):
+                data = c.fetchone()[3]
+                if sha256_crypt.verify(request.form['password'], data):
+                    session['logged_in'] = True
+                    session['username'] = request.form['username']
+                    flash("You are now logged in")
+                    return redirect(url_for("lab"))
+            elif (c.execute("SELECT * FROM users WHERE username = (%s) AND role_id = ('3')",
+                              thwart(request.form['username']))):
+                data = c.fetchone()[3]
+                if sha256_crypt.verify(request.form['password'], data):
+                    session['logged_in'] = True
+                    session['username'] = request.form['username']
+                    flash("You are now logged in")
+                    return redirect(url_for("manufacturer"))
             else:
-                error = "Invalid credentials, try again."
+                error = "Invalid credentials, try again." 
+            #--------------------------------------------------------
 
         gc.collect()
 
