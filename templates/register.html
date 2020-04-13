@@ -4,19 +4,20 @@
 
 <body>
 	<div class = "container">
-		<h4>Register</h4>
+	
+		<h2 class="text-center">Register</h2>
 		<br>
 		{% from "_formhelpers.html" import render_field %}
 		<form method=post action="/register/">
-			<dl>
-				{{render_field(form.username)}}
-				{{render_field(form.email)}}
-				{{render_field(form.password)}}
-				{{render_field(form.confirm)}}
+			<div>
+				{{render_field(form.username, class="form-control", placeholder = "Enter your username")}}
+				{{render_field(form.email, class="form-control", placeholder = "Enter your email id")}}
+				{{render_field(form.password, class="form-control", placeholder = "Enter new password")}}
+				{{render_field(form.confirm, class="form-control", placeholder = "Repeat your password")}}
 				{{render_field(form.role_id)}}
 			  	{{render_field(form.accept_tos)}}
-			</dl>
-			<p><input type=submit value=Register></p>
+			</div>
+			<p><input type=submit value=Register class="btn btn-info"></p>
 		</form>
 		
 		{% if error %}

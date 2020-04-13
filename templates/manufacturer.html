@@ -1,47 +1,77 @@
 {% extends "header.html" %}
 
 {% block body %}
-
-
-<div role="tabpanel">
-
-<!-- Nav tabs -->
-<!-- <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Basics&nbsp;&nbsp;&nbsp;</a></li>
-    <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev&nbsp;&nbsp;&nbsp;</a></li>
-    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis&nbsp;&nbsp;&nbsp;</a></li>
-</ul> -->
-
-<!-- Tab panes -->
-<!-- <div class="tab-content">
-<div role="tabpanel" class="tab-pane fade in active" id="basics">
-    <ul>
-    {% for t in TOPIC_DICT["Basics"] %}
-        <li><a href="{{t[1]}}">{{t[0]}}</a></li>
-    {% endfor %}
-    </ul>
+<div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Manufacturer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown link
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+                </li>
+            </ul>
+            </div>
+        </nav>
 </div>
-
-
-<div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
-
-
-<div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div>
-
-</div> -->
-<body>
-    <ul class="nav justify-content-end">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Add Product</a>
-
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Show available products</a>
-        </li>
-      </ul>
-
+<div role="tabpanel">
+    <body>
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+                <!-- <a class="nav-link active" href="/add/">Add Product</a>  -->
+                <a class="nav-link active" href="/addproduct/">Add Product</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Show available products</a>
+            </li>
+        </ul>
+    
     <h4>Welcome to Manufacturer</h4>
-</body>
-</div> 
+    </body>
+    </div> 
 
+<div class="container mt-5">
+    <table class="table table-sm table-striped">
+        <thead>
+            <th>Sr</th>
+            <th>Product</th>
+            <th>Seller</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{product[1]}}</td>
+                <td>{{product[2]}}</td>
+                <td>$ {{product[3]}}</td>
+                <td>{{product[4]}}%</td>
+                <td>Edit</td>
+                <td>Delete</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

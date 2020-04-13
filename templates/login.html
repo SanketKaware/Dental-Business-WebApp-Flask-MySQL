@@ -2,9 +2,35 @@
 {% block body %}
 <body>
 	<div class="container">
+		<div class="row">
+			<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h2 class="text-center">Login</h2>
+					<br>
+					<form role="form" method="post"></form>
+					<form action="" class="form" method="POST">
+						<input type="text" class="form-control" placeholder = "Username" name="username" value="{{request.form.username}}">
+						<br>
+						<input type="password" class="form-control" placeholder = "Password" name="password" value="{{request.form.password}}">
+						<br>
+						<input class="btn btn-info" type="submit" value="Login">
+					</form>
+					<p>{{error}}</p> 
+				</div>
+			<div class="col-md-3"></div>
+		</div>
+	</div>
+</body>
+
+
+
+
+
+<!-- <body>
+	<div class="container">
 		<br>
 		<h4>Please Login:</h4>
-        <br>
+		<br>
         <form role="form" method="post"></form>
 		<form action="" class="form-inline" method="POST">
 			<input type="text" class="form-control" placeholder = "Username" name="username" value="{{request.form.username}}">
@@ -13,5 +39,5 @@
         </form>
         <p>{{error}}</p> 
 	</div>
-</body>
+</body> -->
 {% endblock %}

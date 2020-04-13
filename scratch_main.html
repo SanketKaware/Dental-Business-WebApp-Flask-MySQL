@@ -607,4 +607,100 @@
 </body>
 
 </html>
+===================================== Manufacturer.html 12 April 2020===========================
+{% extends "header.html" %}
+
+{% block body %}
+
+
+<div role="tabpanel">
+
+<!-- Nav tabs -->
+<!-- <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Basics&nbsp;&nbsp;&nbsp;</a></li>
+    <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev&nbsp;&nbsp;&nbsp;</a></li>
+    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis&nbsp;&nbsp;&nbsp;</a></li>
+</ul> -->
+
+<!-- Tab panes -->
+<!-- <div class="tab-content">
+<div role="tabpanel" class="tab-pane fade in active" id="basics">
+    <ul>
+    {% for t in TOPIC_DICT["Basics"] %}
+        <li><a href="{{t[1]}}">{{t[0]}}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+
+
+<div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
+
+
+<div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div>
+
+</div> -->
+
+<!-- ---------------------- 4 April 2020------------------- -->
+<!-- <body>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Add Product</a>
+
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Show available products</a>
+        </li>
+      </ul>
+
+    <h4>Welcome to Manufacturer</h4>
+</body> -->
+<!-- -------------------------- 4 April 2020 End---------------- -->
+<body>
+    <!-- <a role="presentation"  data-toggle="modal" data-target="#register" href="/add_product/"> Add Products&nbsp;&nbsp;&nbsp;</a><h5>
+        <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">Add product</h4>	
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form method=post action="/register">
+                                <dl>
+                                        <dt><label for="username">Username</label>
+                                        <dd><input id="username" name="username" type="text" value=""></dd>
+
+                                        <dt><label for="pname">Name of Product</label>
+                                        <dd><input id="pname" name="pname" type="text" value=""></dd>
+
+
+                                        <dt><label for="pprice">Price</label>
+                                        <dd><input id="pprice" name="pprice" type="number" value=""></dd>
+
+                                </dl>
+                                <p><input type=submit value="Add">
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ -->
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <!-- <a class="nav-link active" href="/add/">Add Product</a> -->
+            <a class="nav-link active" href="/addproduct/">Add Product</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Show available products</a>
+        </li>
+    </ul>
+
+<h4>Welcome to Manufacturer</h4>
+</body>
+</div> 
+
+{% endblock %}
 
