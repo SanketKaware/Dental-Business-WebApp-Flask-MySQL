@@ -2,15 +2,13 @@ from flask import Flask, render_template, flash, request, url_for, redirect, ses
 from content_management import Content
 from dbconnect import connection
 from forms import AddForm, RegistrationForm, Addproducts
-# from wtforms import Form, BooleanField, TextField, PasswordField, StringField, validators, RadioField
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 from functools import wraps
 import gc
 from flask_wtf import FlaskForm
 
-# ------- April 10---------
-# from products import routes
+
 
 
 
@@ -26,9 +24,6 @@ def homepage():
 
 @app.route('/dashboard/')
 def dashboard():
-    # flash("flash test!!!!")
-    # flash("fladfasdfsaassh test!!!!")
-    # flash("asdfas asfsafs!!!!")
     return render_template("dashboard.html", TOPIC_DICT = TOPIC_DICT)
 
 @app.route('/clinic/')
@@ -43,9 +38,9 @@ def lab():
 @app.route('/manufacturer/')
 def manufacturer():
     c, conn = connection()
-    data = c.execute("SELECT * FROM products_manufacturer1")
+    data = c.execute("SELECT * FROM products_manufacturer1 order by name, price DESC")
     products1 = c.fetchall()
-    print(products1)
+    # print(products1)
     return render_template("manufacturer.html", products=products1)
 
 #-------------------------11 April 2020 start -----------------------
@@ -78,7 +73,109 @@ def addproduct():
     except Exception as e:
         return(str(e))
 #-------------------------11 April 2020 end -----------------------
+#-------------------------13 April start--------------------------
+# @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
+# def updateproduct(id):
+#     if 'email' not in session:
+#         flash(f'Please login first','danger')
+#         #return redirect(url_for('login_page'))
+    
+#     if request.method == 'POST':
+#         c, conn = connection()
+#         updateproduct = c.execute("SELECT id FROM products_manufacturer1")
+#         name = c.execute("SELECT name FROM products_manufacturer1")
+#         updateproduct.name = name
+#         conn.commit()
+#         flash(f'Your product name has been updated','success')
+#         return redirect(url_for('manufacturer'))
+#     return render_template('products/updateproduct.html', title='Update a Product') 
 
+
+@app.route('/updateproduct/<int:id>', methods=['GET','POST'])
+def updateproduct(id):
+    try:
+        form = Addproducts(request.form)
+        c, conn = connection()
+        product = c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
+        product1 = c.fetchone()
+        print(product1)
+        print("Total rows are:  ", len(product1)+1)
+        # if request.method=="POST":
+        #     product.name = form.name.data
+        #     product.username = form.username.data
+        #     product.price = form.price.data
+        #     product.discount = form.discount.data
+        #     product.stock = form.stock.data
+        #     product.discription = form.discription.data
+        #     # c.execute("UPDATE products_manufacturer1 SET (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+        #     #     (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+        #     conn.commit()
+        #     flash(f'Your product name has been updated','success')
+        #     c.close()
+        #     conn.close()
+        #     gc.collect()
+        #     return redirect(url_for('manufacturer'))
+        form.name.data = product.name
+        form.username.data = product.username
+        form.price.data = row[3]
+        form.discount.data = row[4]
+        form.stock.data = row[5]
+        form.discription.data = row[6]
+        return render_template('products/updateproduct.html', title='Update a Product')
+    except Exception as e:
+        return(str(e))
+
+
+
+
+
+
+    # form = Addproducts(request.form)
+    #                                     # if 'email' not in session:
+    #                                     #     flash(f'Login first please','danger')
+    #                                     #     #return redirect(url_for('login_page'))
+    # c, conn = connection()
+    # data = c.execute("SELECT * FROM products_manufacturer1 where id = 1")
+    # product = c.fetchall()
+    # print(product)
+    # print("Total rows are:  ", len(product))
+    # print("Printing each row")
+    # for row in product:
+    #     form.name.data = row[1]
+    #     form.username.data = row[2]
+    #     form.price.data = row[3]
+    #     form.discount.data = row[4]
+    #     form.stock.data = row[5]
+    #     form.discription.data = row[6]
+
+    # if request.method =="POST":
+    #                                         # product.name = form.name.data 
+    #                                         # product.username = form.username.data
+    #                                         # product.price = form.price.data
+    #                                         # product.discount = form.discount.data
+    #                                         # product.stock = form.stock.data 
+    #                                         # product.discription = form.discription.data
+    #                                         # c, conn = connection()
+    #     c.execute("UPDATE products_manufacturer1 set name = form.name.data , username = form.username.data, price = form.price.data, discount = form.discount.data, stock= form.stock.data, discription= form.discription.data",
+    #                  (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+    #                                     # c.execute("UPDATE INTO products_manufacturer1 (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+    #                                     #             (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+    #     conn.commit()
+    #     flash(f'The product {name} was updated in database','success')
+    #     c.close()
+    #     conn.close()
+    #     gc.collect()
+
+    #     return redirect(url_for('manufacturer'))
+    #                                     # for pro in product:
+    #                                     #     form.name.data = pro[1]
+    #                                     #     form.username.data = pro[2]
+    #                                     #     form.price.data = pro[3]
+    #                                     #     form.discount.data = pro[4]
+    #                                     #     form.stock.data = pro[5]
+    #                                     #     form.discription.data = pro[6]
+    # return render_template('products/updateproduct.html', form=form, product=product)
+#--------------------------13 April end------------------------------------------
 # ----------------------- 5,7 April 2020 start-------------------
 
 
@@ -114,6 +211,28 @@ def addproduct():
 #     except Exception as e:
 #         return(str(e))
 #------------------------- 5,7 April 2020 end ---------------------
+#--------------------- 17 April 2020----------------------------
+@app.route('/deleteproduct/<int:id>', methods=['POST'])
+def deleteproduct(id):
+    try:
+        product = Addproducts(request.form)
+        
+        if request.method=="POST":
+            name = product.name.data                    # April 17,2020.- Delete button working properly but this name parameter is not passing value in {name} and also print(record) is not working
+            c, conn = connection()
+            print("Displaying Manufacturer products Before Deleting it")
+            c.execute("DELETE FROM products_manufacturer1 WHERE id= %s",id)
+            record = c.fetchone()
+            print(record)
+            conn.commit()
+            flash(f'The product {name} was deleted from your record','success')
+            c.close()
+            conn.close()
+            gc.collect()
+            return redirect(url_for('manufacturer'))
+    except Exception as e:
+        return(str(e))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html")
