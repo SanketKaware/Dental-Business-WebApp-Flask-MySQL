@@ -1,15 +1,13 @@
 from flask import Flask, render_template, flash, request, url_for, redirect, session
 from content_management import Content
 from dbconnect import connection
-from forms import AddForm, RegistrationForm, Addproducts
+from forms import AddForm, RegistrationForm, Addproducts, Addproducts_lab
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 from functools import wraps
 import gc
 from flask_wtf import FlaskForm
-
-
-
+from carts.carts import  AddCart
 
 
 TOPIC_DICT = Content()
@@ -25,15 +23,343 @@ def homepage():
 @app.route('/dashboard/')
 def dashboard():
     return render_template("dashboard.html", TOPIC_DICT = TOPIC_DICT)
+#-----------------------------------------------------------------------------------
+def MagerDicts(dict1,dict2):
+    if isinstance(dict1, list) and isinstance(dict2,list):
+        return dict1  + dict2
+    if isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict(list(dict1.items()) + list(dict2.items()))
 
+
+#--------------------------------------AddCart for Clinic->Details->Add Cart------------------------------------------------
+@app.route('/addcart', methods=['POST'])
+def AddCart():
+    try:
+        product_id = request.form.get('product_id')
+        quantity = int(request.form.get('quantity'))
+        c, conn = connection()
+        data = c.execute("SELECT * FROM products_lab WHERE id= %s",product_id)
+        products1 = c.fetchone()
+        if request.method == "POST":
+            DictItems = {product_id:{'name':products1[1], 'price':products1[3], 'discount': products1[4], 'quantity':quantity}}
+            print(product_id, quantity)
+            if 'Shoppingcart' in session:
+                print(session['Shoppingcart'])
+                if product_id in session['Shoppingcart']:
+                    print('This  product is already addded in your cart')
+                    for key, item in session['Shoppingcart'].items():
+                        if int(key) == int(product_id):
+                            session.modified = True
+                            item['quantity'] = item['quantity'] + 1
+                else:
+                    session['Shoppingcart'] = MagerDicts(session['Shoppingcart'], DictItems)
+                    return redirect(request.referrer)
+            else:
+                session['Shoppingcart'] = DictItems
+                return redirect(request.referrer)
+              
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+
+
+@app.route('/carts', methods=['GET'])
+def getCart():
+    if 'Shoppingcart'not in session or len(session['Shoppingcart'])<=0:
+        c, conn = connection()
+        if (c.execute("SELECT * FROM users WHERE role_id = ('1')")):
+            session['logged_in'] = True
+            return redirect(url_for("clinic"))
+    
+        elif (c.execute("SELECT * FROM users WHERE role_id = ('2')")):
+            session['logged_in'] = True
+            return redirect(url_for("lab"))
+
+        elif (c.execute("SELECT * FROM users WHERE role_id = ('3')")):
+            session['logged_in'] = True
+            return redirect(url_for("manufacturer"))
+
+    subtotal = 0
+    grandtotal = 0 
+    for key, product in session['Shoppingcart'].items():
+        discount = (product['discount']/100) * float(product['price'])
+        subtotal += float(product['price']) * int(product['quantity'])
+        subtotal -= discount
+        tax = ("%0.2f" % (.06 * float(subtotal)))
+        grandtotal = float("%.2f" % (1.06 * subtotal))
+
+    return render_template('products/carts.html', tax=tax, grandtotal=grandtotal)
+
+
+
+@app.route('/updatecart/<int:code>', methods=['POST'])
+def updatecart(code):
+    if 'Shoppingcart'not in session or len(session['Shoppingcart']) <= 0:
+        return redirect('carts')
+
+    if request.method == "POST":
+        quantity = request.form.get('quantity')
+        try:
+            session.modified = True
+            for key, item in session['Shoppingcart'].items():
+                if int(key) == code:
+                    item['quantity'] = quantity
+                    flash('Item is updated')
+                    return redirect(url_for('getCart'))
+        except Exception as e:
+            print(e)
+            return redirect(url_for('getCart'))
+
+
+
+@app.route('/deleteitem/<int:id>', methods=['GET'])
+def deleteitem(id):
+    if 'Shoppingcart'not in session or len(session['Shoppingcart']) <= 0:
+        c, conn = connection()
+        if (c.execute("SELECT * FROM users WHERE role_id = ('1')")):
+            if 'logged_in' in session:
+                session['logged_in'] = True
+            return redirect(url_for("clinic"))
+    
+        elif (c.execute("SELECT * FROM users WHERE role_id = ('2')")):
+            session['logged_in'] = True
+            return redirect(url_for("lab"))
+
+        elif (c.execute("SELECT * FROM users WHERE role_id = ('3')")):
+            session['logged_in'] = True
+            return redirect(url_for("manufacturer"))
+
+        # return redirect('carts')
+    try:
+        session.modified = True
+        for key, item in session['Shoppingcart'].items():
+            if int(key) == id:
+                session['Shoppingcart'].pop(key, None)
+                return redirect(url_for('getCart'))
+    except Exception as e:
+        print(e)
+        return redirect(url_for('getCart'))
+
+@app.route('/clearcart')
+def clearcart():
+    try:
+        session.pop('Shoppingcart', None)
+        return redirect('carts')
+    except Exception as e:
+        print(e)
+
+
+
+@app.route('/empty')
+def empty_cart():
+    try:
+        session.clear()
+        return redirect(url_for('carts'))
+    except Exception as e:
+        print(e)
+
+#--------------------------------------AddCart for Lab->Details->Add Cart------------------------------------------------
+@app.route('/addcart_lab', methods=['POST'])
+def AddCart_lab():
+    try:
+        product_id = request.form.get('product_id')
+        quantity = request.form.get('quantity')
+        c, conn = connection()
+        data = c.execute("SELECT * FROM products_manufacturer1 WHERE id= %s",product_id)
+        products1 = c.fetchone()
+        if request.method == "POST":
+            DictItems = {product_id:{'name':products1[1], 'price':products1[3], 'discount': products1[4], 'quantity':quantity}}
+            if 'Shoppingcart' in session:
+                print(session['Shoppingcart'])
+                if product_id in session['Shoppingcart']:
+                    for key, item in session['Shoppingcart'].items():
+                        if int(key) == int(product_id):
+                            session.modified = True
+                            item['quantity'] += 1
+                else:
+                    session['Shoppingcart'] = MagerDicts(session['Shoppingcart'], DictItems)
+                    return redirect(request.referrer)
+            else:
+                session['Shoppingcart'] = DictItems
+                return redirect(request.referrer)
+              
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+#--------------------------------------------------------------------------------------
 @app.route('/clinic/')
 def clinic():
-    return render_template("clinic.html", TOPIC_DICT = TOPIC_DICT)
+    page = request.args.get('page',1, type=int)
+    per_page = 4
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_lab where stock>0 order by name, price DESC LIMIT 10 offset 0")
+    # data = c.execute("SELECT * FROM products_lab order by name, price DESC LIMIT 10 offset 0")
+    products1 = c.fetchall()
+    # products1.paginate(page=page, per_page=4)
+    # products1.paginate(page=page, per_page=4)
+    # data1 = c.execute("SELECT DISTINCT username FROM products_lab")
+    # sellers1 = c.fetchall()
+    # print(products1)
+    return render_template("clinic.html", products=products1, TOPIC_DICT = TOPIC_DICT)
+    # return render_template("clinic.html", TOPIC_DICT = TOPIC_DICT)
+#----------------------------Singel_page for Clinic->Details->Details info page for clinic----------------------------------------------------------
+@app.route('/products/<int:id>')
+def single_page(id):
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_lab WHERE id= %s",id)
+    products1 = c.fetchall()
+    return render_template('products/single_page.html', products=products1)
+#----------------------------Singel_page for Lab->Details->Details info page for Lab----------------------------------------------------------
+@app.route('/products1/<int:id>')
+def detail_page(id):
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_manufacturer1 WHERE id= %s",id)
+    products1 = c.fetchall()
+    return render_template('products/detail_page.html', products=products1)
+
+# @app.route('/sellers/')
+# def get_sellers():   
+#     c, conn = connection()
+#     data = c.execute("SELECT DISTINCT username FROM products_lab")
+#     sellers = c.fetchall()
+#     # print(products1)
+#     return render_template("clinic.html", sellers=sellers,TOPIC_DICT = TOPIC_DICT)
+
+# @app.route('/addproduct_lab/', methods=['GET','POST'])
+# def addproduct_lab():
+#     try:
+#         form = Addproducts_lab(request.form)
+
+#         if request.method=="POST" and form.validate():
+#             name = form.name.data
+#             username = form.username.data
+#             price = form.price.data
+#             discount = form.discount.data
+#             stock = form.stock.data
+#             discription = form.discription.data
+#             c, conn = connection()
+
+#             c.execute("INSERT INTO products_lab (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+#                         (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+#             conn.commit()
+#             flash(f'The product {name} was added in database','success')
+#             c.close()
+#             conn.close()
+#             gc.collect()
+
+#             return redirect(url_for('lab'))
+#         return render_template('products/addproduct_lab.html', form=form, title='Add a Product')
+#     except Exception as e:
+#         return(str(e))
+
+# @app.route('/updateproduct_lab/<int:id>', methods=['GET','POST'])
+# def updateproduct_lab(id):
+#     form = Addproducts_lab(request.form)
+#     return render_template('products/updateproduct_lab.html',  form=form, product = record, title='Update a Product')
+
+# @app.route('/deleteproduct_lab/<int:id>', methods=['POST'])
+# def deleteproduct_lab(id):
+#     try:
+#         product = Addproducts_lab(request.form)
+        
+#         if request.method=="POST":
+#             name = product.name.data                    # April 17,2020.- Delete button working properly but this name parameter is not passing value in {name} and also print(record) is not working
+#             c, conn = connection()
+#             print("Displaying Manufacturer products Before Deleting it")
+#             c.execute("DELETE FROM products_lab WHERE id= %s",id)
+#             record = c.fetchone()
+#             print(record)
+#             conn.commit()
+#             flash(f'The product {name} was deleted from your record','success')
+#             c.close()
+#             conn.close()
+#             gc.collect()
+#             return redirect(url_for('lab'))
+#     except Exception as e:
+#         return(str(e))
+#--------------------------------------------------------------------------------------
 
 @app.route('/lab/')
 def lab():
-    return render_template("lab.html", TOPIC_DICT = TOPIC_DICT)
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_manufacturer1 order by name, price DESC")
+    products1 = c.fetchall()
+    # print(products1)
+    return render_template("lab.html", products=products1, TOPIC_DICT = TOPIC_DICT)
 
+
+
+@app.route('/products/<int:id>')
+def single_page1(id):
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_lab WHERE id= %s",id)
+    products1 = c.fetchall()
+    return render_template('products/single_page.html', products=products1)
+
+@app.route('/labproduct/')
+def labproduct():
+    c, conn = connection()
+    data = c.execute("SELECT * FROM products_lab order by name, price DESC")
+    products1 = c.fetchall()
+    # print(products1)
+    return render_template("products/labproduct.html", products=products1, TOPIC_DICT = TOPIC_DICT)
+
+@app.route('/addproduct_lab/', methods=['GET','POST'])
+def addproduct_lab():
+    try:
+        form = Addproducts_lab(request.form)
+
+        if request.method=="POST" and form.validate():
+            name = form.name.data
+            username = form.username.data
+            price = form.price.data
+            discount = form.discount.data
+            stock = form.stock.data
+            discription = form.discription.data
+            c, conn = connection()
+
+            c.execute("INSERT INTO products_lab (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+            conn.commit()
+            flash(f'The product {name} was added in database','success')
+            c.close()
+            conn.close()
+            gc.collect()
+
+            return redirect(url_for('lab'))
+        return render_template('products/addproduct_lab.html', form=form, title='Add a Product')
+    except Exception as e:
+        return(str(e))
+
+@app.route('/updateproduct_lab/<int:id>', methods=['GET','POST'])
+def updateproduct_lab(id):
+    form = Addproducts_lab(request.form)
+    return render_template('products/updateproduct_lab.html',  form=form, product = record, title='Update a Product')
+
+@app.route('/deleteproduct_lab/<int:id>', methods=['POST'])
+def deleteproduct_lab(id):
+    try:
+        product = Addproducts_lab(request.form)
+        
+        if request.method=="POST":
+            name = product.name.data                    # April 17,2020.- Delete button working properly but this name parameter is not passing value in {name} and also print(record) is not working
+            c, conn = connection()
+            print("Displaying Manufacturer products Before Deleting it")
+            c.execute("DELETE FROM products_lab WHERE id= %s",id)
+            record = c.fetchone()
+            print(record)
+            conn.commit()
+            flash(f'The product {name} was deleted from your record','success')
+            c.close()
+            conn.close()
+            gc.collect()
+            return redirect(url_for('lab'))
+    except Exception as e:
+        return(str(e))
+#--------------------------------------------------------------------------------------
 
 @app.route('/manufacturer/')
 def manufacturer():
@@ -68,149 +394,69 @@ def addproduct():
 
             return redirect(url_for('manufacturer'))
         return render_template('products/addproduct.html', form=form, title='Add a Product')
-        # return render_template("addproduct.html", form=form)
-
     except Exception as e:
         return(str(e))
-#-------------------------11 April 2020 end -----------------------
-#-------------------------13 April start--------------------------
-# @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
-# def updateproduct(id):
-#     if 'email' not in session:
-#         flash(f'Please login first','danger')
-#         #return redirect(url_for('login_page'))
-    
-#     if request.method == 'POST':
-#         c, conn = connection()
-#         updateproduct = c.execute("SELECT id FROM products_manufacturer1")
-#         name = c.execute("SELECT name FROM products_manufacturer1")
-#         updateproduct.name = name
-#         conn.commit()
-#         flash(f'Your product name has been updated','success')
-#         return redirect(url_for('manufacturer'))
-#     return render_template('products/updateproduct.html', title='Update a Product') 
-
-
+#-------------------------17 April 2020 START -----------------------
 @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
 def updateproduct(id):
     try:
         form = Addproducts(request.form)
-        c, conn = connection()
-        product = c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
-        product1 = c.fetchone()
-        print(product1)
-        print("Total rows are:  ", len(product1)+1)
+        record = None
+        # print(id=%s, id)
+        
         # if request.method=="POST":
-        #     product.name = form.name.data
-        #     product.username = form.username.data
-        #     product.price = form.price.data
-        #     product.discount = form.discount.data
-        #     product.stock = form.stock.data
-        #     product.discription = form.discription.data
-        #     # c.execute("UPDATE products_manufacturer1 SET (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
-        #     #     (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+        if request.method=="POST" and form.validate():
+            c, conn = connection()
+            # c.execute("UPDATE products_manufacturer1 SET name = %s, username = %s, price = %s, discount = %s, stock = %s, discription = %s WHERE id = %s",
+            #     form.name.data,
+            #     form.username.data,
+            #     form.price.data,
+            #     form.discount.data,
+            #     form.stock.data,
+            #     form.discription.data,
+            #     id)
+            c.execute("UPDATE products_manufacturer1 SET (name, username, price, discount, stock, discription) WHERE id = %s VALUES (%s, %s, %s, %s, %s, %s)",
+                id,
+                form.name.data,
+                form.username.data,
+                form.price.data,
+                form.discount.data,
+                form.stock.data,
+                form.discription.data,
+                )
+            # c.execute("UPDATE products_manufacturer1 SET name = %s, username = %s, price = %s, discount = %s, stock = %s, discription = %s WHERE id = %s",
+            #      (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription), id))
+            record = c.fetchone()
+            print(record)
+            conn.commit()
+            flash(f'The product {name} was updated in database','success')
+            c.close()
+            conn.close()
+            gc.collect()
+            return redirect(url_for('manufacturer'))
+
+        # else:
+        # # if request.method=="GET":
+        #     c, conn = connection()
+        #     # product = c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
+        #     c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
+        #     product1 = c.fetchone()
+        #     print(product1)
         #     conn.commit()
-        #     flash(f'Your product name has been updated','success')
         #     c.close()
         #     conn.close()
         #     gc.collect()
-        #     return redirect(url_for('manufacturer'))
-        form.name.data = product.name
-        form.username.data = product.username
-        form.price.data = row[3]
-        form.discount.data = row[4]
-        form.stock.data = row[5]
-        form.discription.data = row[6]
-        return render_template('products/updateproduct.html', title='Update a Product')
+        # form.name.data = product1[1]
+        # form.username.data = product1[2]
+        # form.price.data = product1[3]
+        # form.discount.data = product1[4]
+        # form.stock.data = product1[5]
+        # form.discription.data = product1[6]
+        # return render_template('products/updateproduct.html', id= id, form=form, title='Update a Product')
+        return render_template('products/updateproduct.html',  form=form, product = record, title='Update a Product')
     except Exception as e:
         return(str(e))
 
-
-
-
-
-
-    # form = Addproducts(request.form)
-    #                                     # if 'email' not in session:
-    #                                     #     flash(f'Login first please','danger')
-    #                                     #     #return redirect(url_for('login_page'))
-    # c, conn = connection()
-    # data = c.execute("SELECT * FROM products_manufacturer1 where id = 1")
-    # product = c.fetchall()
-    # print(product)
-    # print("Total rows are:  ", len(product))
-    # print("Printing each row")
-    # for row in product:
-    #     form.name.data = row[1]
-    #     form.username.data = row[2]
-    #     form.price.data = row[3]
-    #     form.discount.data = row[4]
-    #     form.stock.data = row[5]
-    #     form.discription.data = row[6]
-
-    # if request.method =="POST":
-    #                                         # product.name = form.name.data 
-    #                                         # product.username = form.username.data
-    #                                         # product.price = form.price.data
-    #                                         # product.discount = form.discount.data
-    #                                         # product.stock = form.stock.data 
-    #                                         # product.discription = form.discription.data
-    #                                         # c, conn = connection()
-    #     c.execute("UPDATE products_manufacturer1 set name = form.name.data , username = form.username.data, price = form.price.data, discount = form.discount.data, stock= form.stock.data, discription= form.discription.data",
-    #                  (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
-    #                                     # c.execute("UPDATE INTO products_manufacturer1 (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
-    #                                     #             (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
-    #     conn.commit()
-    #     flash(f'The product {name} was updated in database','success')
-    #     c.close()
-    #     conn.close()
-    #     gc.collect()
-
-    #     return redirect(url_for('manufacturer'))
-    #                                     # for pro in product:
-    #                                     #     form.name.data = pro[1]
-    #                                     #     form.username.data = pro[2]
-    #                                     #     form.price.data = pro[3]
-    #                                     #     form.discount.data = pro[4]
-    #                                     #     form.stock.data = pro[5]
-    #                                     #     form.discription.data = pro[6]
-    # return render_template('products/updateproduct.html', form=form, product=product)
-#--------------------------13 April end------------------------------------------
-# ----------------------- 5,7 April 2020 start-------------------
-
-
-# @app.route('/add/', methods=["GET","POST"])
-# def add():
-#     try:
-#         form = AddForm(request.form)
-
-#         if request.method == "POST" and form.validate():
-#             username  = form.username.data
-#             pname = form.pname.data
-#             pprice =  form.pprice.data
-#             c, conn = connection()
-
-#             # x = c.execute("SELECT * FROM products_manufacturer",
-#             #               (thwart(username)))
-
-#             c.execute("INSERT INTO products_manufacturer (username, pname, pprice) VALUES (%s, %s, %s)",
-#                         (thwart(username), thwart(pname), thwart(pprice)))
-#             conn.commit()
-#             flash("Product added successfully!")
-#             c.close()
-#             conn.close()
-#             gc.collect()
-
-#             # session['logged_in'] = True
-#             # session['username'] = username
-
-#             return redirect(url_for('manufacturer'))
-
-#         return render_template("add.html", form=form)
-
-#     except Exception as e:
-#         return(str(e))
-#------------------------- 5,7 April 2020 end ---------------------
 #--------------------- 17 April 2020----------------------------
 @app.route('/deleteproduct/<int:id>', methods=['POST'])
 def deleteproduct(id):
@@ -232,6 +478,7 @@ def deleteproduct(id):
             return redirect(url_for('manufacturer'))
     except Exception as e:
         return(str(e))
+#--------------------------------------------------------------------------------------
 
 @app.errorhandler(404)
 def page_not_found(e):

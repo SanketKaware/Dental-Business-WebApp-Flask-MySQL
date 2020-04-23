@@ -1,3 +1,432 @@
+{% extends "header.html" %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+                <th>Sr</th>
+                <th>Name</th>
+                <th>Seller</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Subtotal</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </thead>
+            <tbody>
+                {% for key, product in session['Shoppingcart'].items() %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{pro[1]}}</td>
+                    <td>{{product[2]}}</td>
+                    <td>{{product[3]}}</td>
+                    <td>{{product[4]}}</td>
+                    <td></td>
+                    <td>Update</td>
+                    <td>Remove</td>
+                </tr>
+                {% endfor  %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+#--------------------------- 19 April 2020 #lab.html---------------------------
+{% extends "header.html" %}
+
+{% block body %}
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/lab">Lab</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/addproduct_lab">Add products</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/labproduct/">Show available products</a>
+            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown link
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+            </li>
+        </ul>
+        </div>
+    </nav>
+</div>
+
+
+
+<div role="tabpanel">
+<body>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link active" href="/addproduct_lab/">Add Product</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/labproduct/">Show available products</a>
+        </li>
+    </ul>
+
+<h4>Welcome to Lab</h4>
+</body>
+</div> 
+
+<div class="container mt-5">
+<table class="table table-sm table-striped">
+    <thead>
+        <th>Sr</th>
+        <th>Product</th>
+        <th>Seller</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Available</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{product[1]}}</td>
+            <td>{{product[2]}}</td>
+            <td>$ {{product[3]}}</td>
+            <td>{{product[4]}}%</td>
+            <td>{{product[5]}}</td>
+            <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
+            <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<div role="tabpanel">
+
+{% endblock %}
+
+
+#--------------------------- 19 April 2020 #clinic.html---------------------------
+{% extends "header.html" %}
+
+{% block body %}
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/clinic">Clinic</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">Add products</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="#">Show available products</a>
+            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown link
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+            </li>
+        </ul>
+        </div>
+    </nav>
+</div>
+<div role="tabpanel">
+<body>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <!-- <a class="nav-link active" href="/add/">Add Product</a>  -->
+            <a class="nav-link active" href="#">Add Product</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Show available products</a>
+        </li>
+    </ul>
+
+<h4>Welcome to Clinic</h4>
+</body>
+</div> 
+
+<div class="container mt-5">
+<table class="table table-sm table-striped">
+    <thead>
+        <th>Sr</th>
+        <th>Product</th>
+        <th>Seller</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Available</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{product[1]}}</td>
+            <td>{{product[2]}}</td>
+            <td>$ {{product[3]}}</td>
+            <td>{{product[4]}}%</td>
+            <td>{{product[5]}}</td>
+            <!-- <td><a href="{{url_for('updateproduct', id=product[0])}}" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td> -->
+            <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
+            <td><a href="#" class="btn btn-sm btn-danger" method="POST">Delete</a></td>
+            <!-- <td>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{product[0]}}">
+                    Delete
+                </button>
+                
+            </td> -->
+        </tr>
+        <!-- Button trigger modal -->
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal-{{product[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{product[1]}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                <p class="text-danger">Are you sure that you want to delete the product ({{product[1]}}) ?</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
+                <form action="{{url_for('deleteproduct', id=product[0])}}" method="POST">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+<!-- <div role="tabpanel"> -->
+
+<!-- Nav tabs -->
+<!-- <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Basics&nbsp;&nbsp;&nbsp;</a></li>
+    <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev&nbsp;&nbsp;&nbsp;</a></li>
+    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis&nbsp;&nbsp;&nbsp;</a></li>
+
+</ul> -->
+
+<!-- Tab panes -->
+<!-- <div class="tab-content">
+<div role="tabpanel" class="tab-pane fade in active" id="basics">
+    <ul>
+    {% for t in TOPIC_DICT["Basics"] %}
+        <li><a href="{{t[1]}}">{{t[0]}}</a></li>
+    {% endfor %}
+    </ul>
+</div>
+
+
+<div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
+
+
+<div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div>
+
+</div>
+<body>
+    <h4>Welcome to Dental Clinic</h4>
+</body>
+</div> -->
+
+{% endblock %}
+
+
+===============================__init__.py=====================
+#-------------------------11 April 2020 end -----------------------
+#-------------------------13 April start--------------------------
+# @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
+# def updateproduct(id):
+#     if 'email' not in session:
+#         flash(f'Please login first','danger')
+#         #return redirect(url_for('login_page'))
+    
+#     if request.method == 'POST':
+#         c, conn = connection()
+#         updateproduct = c.execute("SELECT id FROM products_manufacturer1")
+#         name = c.execute("SELECT name FROM products_manufacturer1")
+#         updateproduct.name = name
+#         conn.commit()
+#         flash(f'Your product name has been updated','success')
+#         return redirect(url_for('manufacturer'))
+#     return render_template('products/updateproduct.html', title='Update a Product') 
+
+
+@app.route('/updateproduct/<int:id>', methods=['GET','POST'])
+def updateproduct(id):
+    try:
+        form = Addproducts(request.form)
+        c, conn = connection()
+        product = c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
+        product1 = c.fetchone()
+        print(product1)
+        print("Total rows are:  ", len(product1)+1)
+        conn.commit()
+        c.close()
+        conn.close()
+        gc.collect()
+        form.name.data = product1[1]
+        form.username.data = product1[2]
+        form.price.data = product1[3]
+        form.discount.data = product1[4]
+        form.stock.data = product1[5]
+        form.discription.data = product1[6]
+        if request.method=="POST":
+            c, conn = connection()
+            c.execute(" UPDATE products_manufacturer1 SET name = %s, username = %s, price = %s, discount = %s, stock = %s, discription = %s WHERE id = %s ",
+                form.name.data, form.username.data, form.price.data, form.discount.data, form.stock.data, form.discription.data, id)
+            conn.commit()
+            flash(f'The product {name} was updates in database','success')
+            c.close()
+            conn.close()
+            gc.collect()
+            return redirect(url_for('manufacturer'))
+        return render_template('products/updateproduct.html', form=form, title='Update a Product')
+        # return render_template("addproduct.html", form=form)
+
+    except Exception as e:
+        return(str(e))
+            # product1[1] = form.name.data
+            # product1[2] = form.username.data
+            # product1[3] = form.price.data
+            # product1[4] = form.discount.data
+            # product1[5] = form.stock.data
+            # product1[6] = form.discription.data
+            
+
+            #    (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+            # sql = " " " UPDATE products_manufacturer1 SET name = %s, username = %s, price = %s, discount = %s, stock = %s, discription = %s WHERE id = %s " " "
+            # val = (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription))
+            # (form.name, 
+            #     form.username, 
+            #     form.price.data,
+            #     form.discount.data,
+            #     form.stock.data,
+            #     form.discription.data,
+            #     id
+            #     )
+            # c.execute(sql,val)
+            # c.execute("UPDATE products_manufacturer1 SET (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+            #     (form.name, 
+            #     form.username, 
+            #     form.price,
+            #     form.discount,
+            #     form.stock,
+            #     form.discription
+            #     ))
+            
+    # form = Addproducts(request.form)
+
+    # return render_template('products/updateproduct.html', form=form, title='Update a Product')
+    # try:
+    #     # form = Addproducts(request.form)
+        # c, conn = connection()
+        # product = c.execute("SELECT * FROM products_manufacturer1 where id = %s", id)
+        # product1 = c.fetchone()
+        # print(product1)
+        # print("Total rows are:  ", len(product1)+1)
+        # # if request.method=="POST":
+        # #     product.name = form.name.data
+        # #     product.username = form.username.data
+        # #     product.price = form.price.data
+        # #     product.discount = form.discount.data
+        # #     product.stock = form.stock.data
+        # #     product.discription = form.discription.data
+        # #     # c.execute("UPDATE products_manufacturer1 SET (name, username, price, discount, stock, discription) VALUES (%s, %s, %s, %s, %s, %s)",
+        # #     #     (thwart(name), thwart(username), thwart(price), thwart(discount), thwart(stock), thwart(discription)))
+        # #     conn.commit()
+        # #     flash(f'Your product name has been updated','success')
+        # #     c.close()
+        # #     conn.close()
+        # #     gc.collect()
+        # #     return redirect(url_for('manufacturer'))
+        # form.name.data = product.name
+        # form.username.data = product.username
+        # form.price.data = row[3]
+        # form.discount.data = row[4]
+        # form.stock.data = row[5]
+        # form.discription.data = row[6]
+        # return render_template('products/updateproduct.html', form=form, title='Update a Product')
+    # except Exception as e:
+    #     return(str(e))
+#--------------------------13 April end------------------------------------------
+# ----------------------- 5,7 April 2020 start-------------------
+
+
+# @app.route('/add/', methods=["GET","POST"])
+# def add():
+#     try:
+#         form = AddForm(request.form)
+
+#         if request.method == "POST" and form.validate():
+#             username  = form.username.data
+#             pname = form.pname.data
+#             pprice =  form.pprice.data
+#             c, conn = connection()
+
+#             # x = c.execute("SELECT * FROM products_manufacturer",
+#             #               (thwart(username)))
+
+#             c.execute("INSERT INTO products_manufacturer (username, pname, pprice) VALUES (%s, %s, %s)",
+#                         (thwart(username), thwart(pname), thwart(pprice)))
+#             conn.commit()
+#             flash("Product added successfully!")
+#             c.close()
+#             conn.close()
+#             gc.collect()
+
+#             # session['logged_in'] = True
+#             # session['username'] = username
+
+#             return redirect(url_for('manufacturer'))
+
+#         return render_template("add.html", form=form)
+
+#     except Exception as e:
+#         return(str(e))
+#------------------------- 5,7 April 2020 end ---------------------
+
+
 ===============================Login.html=======================
 {% extends "header.html" %}
 {% block body %}

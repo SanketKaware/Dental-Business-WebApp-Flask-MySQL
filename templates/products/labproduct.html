@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/manufacturer">Manufacturer</a>
+            <a class="navbar-brand" href="/lab">Lab</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -13,7 +13,7 @@
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="/addproduct">Add products</a>
+                <a class="nav-link" href="/addproduct_lab">Add products</a>
                 </li>
                 <li class="nav-item">
                 <a class="nav-link" href="#">Show available products</a>
@@ -37,14 +37,14 @@
         <ul class="nav justify-content-end">
             <li class="nav-item">
                 <!-- <a class="nav-link active" href="/add/">Add Product</a>  -->
-                <a class="nav-link active" href="/addproduct/">Add Product</a>
+                <a class="nav-link active" href="/addproduct_lab/">Add Product</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Show available products</a>
+                <a class="nav-link" href="/labproduct/">Show available products</a>
             </li>
         </ul>
     
-    <h4>Welcome to Manufacturer</h4>
+    <h4>List of available lab products</h4>
     </body>
     </div> 
 
@@ -69,7 +69,8 @@
                 <td>$ {{product[3]}}</td>
                 <td>{{product[4]}}%</td>
                 <td>{{product[5]}}</td>
-                <td><a href="{{url_for('updateproduct', id=product[0])}}" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
+                <!-- <td><a href="{{url_for('updateproduct_lab', id=product[0])}}" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td> -->
+                <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{product[0]}}">
                         Delete
@@ -94,7 +95,7 @@
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal">Cancel</button>
-                    <form action="{{url_for('deleteproduct', id=product[0])}}" method="POST">
+                    <form action="{{url_for('deleteproduct_lab', id=product[0])}}" method="POST">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                     </div>

@@ -2,36 +2,119 @@
 
 {% block body %}
 
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/lab">Lab - Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="{{url_for('getCart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+</div>
+    
+<div class="container">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    {% if product[4]>0 %}
+                    <p style="text-shadow: 1px 1px 2px black; color:red; transform: rotate(0deg); position: absolute; top: 1%; left: 1%;">Discount {{product[4]}}%</p>
+                    {% endif %}
+                    <h5 class="text-center">{{product[1]}}</h5>
+                    <p class="text-center">Price ${{product[3]}}</p>
+                </div>
+                <div class="card-footer">
+                    <!-- <a href="{{url_for('single_page', id=product[0])}} class="float-left btn btn-sm btn-primary ">Details</a> -->
+                    <a href="{{url_for('detail_page', id=product[0])}}" class="float-left btn btn-sm btn-primary ">Details</a>
+                    <form action="{{url_for('AddCart_lab')}}" method="post">
+                      <input type="hidden" name="product_id" value="{{product[0]}}">
+                      <button type="submit" class="btn btn-sm btn-warning float-right">Add cart</button>
+                      
+                      <input type="hidden" name="quantity" id="" value="1" min="1" max="{{product[5]}}">
+                      <!--  -->
+                  </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- ================================================================== -->
 <div role="tabpanel">
-
-<!-- Nav tabs -->
-<ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Basics&nbsp;&nbsp;&nbsp;</a></li>
-    <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev&nbsp;&nbsp;&nbsp;</a></li>
-    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis&nbsp;&nbsp;&nbsp;</a></li>
-
-</ul>
-
-<!-- Tab panes -->
-<div class="tab-content">
-<div role="tabpanel" class="tab-pane fade in active" id="basics">
-    <ul>
-    {% for t in TOPIC_DICT["Basics"] %}
-        <li><a href="{{t[1]}}">{{t[0]}}</a></li>
-    {% endfor %}
-    </ul>
-</div>
-
-
-<div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
-
-
-<div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div>
-
-</div>
 <body>
-    <h4>Welcome to Dental Lab</h4>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link active" href="/addproduct_lab/">Add Product</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/labproduct/">Show available products</a>
+        </li>
+    </ul>
+
+<h4>Welcome to Lab</h4>
 </body>
+</div> 
+
+<div class="container mt-5">
+<table class="table table-sm table-striped">
+    <thead>
+        <th>Sr</th>
+        <th>Product</th>
+        <th>Seller</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Available</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{product[1]}}</td>
+            <td>{{product[2]}}</td>
+            <td>$ {{product[3]}}</td>
+            <td>{{product[4]}}%</td>
+            <td>{{product[5]}}</td>
+            <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
+            <td><a href="#" class="btn btn-sm btn-outline-info" method="POST">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
+
+<div role="tabpanel">
 
 {% endblock %}
