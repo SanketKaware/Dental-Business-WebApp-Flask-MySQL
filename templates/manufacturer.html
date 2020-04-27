@@ -1,54 +1,30 @@
 {% extends "header.html" %}
 
 {% block body %}
+
 <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/manufacturer">Manufacturer</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="/addproduct">Add products</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="#">Show available products</a>
-                </li>
-                <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown link
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-                </li>
-            </ul>
-            </div>
-        </nav>
-</div>
-<div role="tabpanel">
-    <body>
-        <ul class="nav justify-content-end">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/manufacturer">Manufacturer-Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <!-- <a class="nav-link active" href="/add/">Add Product</a>  -->
-                <a class="nav-link active" href="/addproduct/">Add Product</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Show available products</a>
+                <a class="btn btn-link" href="/addproduct">Add product in manufacturer</a>
             </li>
         </ul>
-    
-    <h4>Welcome to Manufacturer</h4>
-    </body>
-    </div> 
+        
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <h4 class="alert alert-secondary" style="text-align: center; ">List of Available Manufacturer Products</h4>
+</div>
+
 
 <div class="container mt-5">
+    
     <table class="table table-sm table-striped">
         <thead>
             <th>Sr</th>
@@ -57,7 +33,7 @@
             <th>Price</th>
             <th>Discount</th>
             <th>Available</th>
-            <th>Edit</th>
+            <!-- <th>Edit</th> -->
             <th>Delete</th>
         </thead>
         <tbody>
@@ -69,16 +45,16 @@
                 <td>$ {{product[3]}}</td>
                 <td>{{product[4]}}%</td>
                 <td>{{product[5]}}</td>
-                <td><a href="{{url_for('updateproduct', id=product[0])}}" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td>
+                <!-- <td><a href="{{url_for('updateproduct', id=product[0])}}" class="btn btn-sm btn-outline-info" method="POST">Edit</a></td> -->
                 <td>
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal-{{product[0]}}">
                         Delete
                     </button>
-                    
+
                 </td>
             </tr>
             <!-- Button trigger modal -->
-            
+
             <!-- Modal -->
             <div class="modal fade" id="exampleModal-{{product[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">

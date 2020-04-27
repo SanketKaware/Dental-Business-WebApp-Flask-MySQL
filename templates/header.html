@@ -21,16 +21,14 @@
 		<h5>
 			<!-- Login Session -->
 			{% if session.logged_in %}
-				<a href="https://www.google.com/"> <span class="glyphicon glyphicon-heart"></span> Support&nbsp;&nbsp;&nbsp;</a>
+				<a href="/about/"> <span class="glyphicon glyphicon-heart"></span> About&nbsp;&nbsp;&nbsp;</a>
 				<a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout&nbsp;&nbsp;&nbsp;</a>
 			{% else %}
 				<!-- Support code(Extra) -->
 				<a href="https://www.google.com/"> Support&nbsp;&nbsp;&nbsp;</a>
 				<!-- Log in code -->
-				<!-- <a role="presentation" data-toggle="modal" data-target="#exampleModal" href="/login/">Login&nbsp;&nbsp;&nbsp;</a> -->
 				<a href="/login/"><span class="glyphicon glyphicon-log-in"></span> Login&nbsp;&nbsp;&nbsp;</a>
 				<!-- Sign out code -->
-				<!-- <a role="presentation"  data-toggle="modal" data-target="#register" href="/register/"> Sign up&nbsp;&nbsp;&nbsp;</a><h5> -->
 				<a href="/register/"><span class="glyphicon glyphicon-pencil"></span> Sign up&nbsp;&nbsp;&nbsp;</a>
 			{% endif %}
 		</h5>
@@ -41,13 +39,13 @@
 
 <body>
 	<div class="container" style="min-height:100% width:80%">
-		
+
 	{% include '_messages.html'%}
-    
+
     {% block body %}{% endblock %}
     </div>
-    
+
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
-</html>	  
+</html>

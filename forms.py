@@ -25,7 +25,7 @@ class RegistrationForm(Form):
     ])
     confirm = PasswordField('Repeat Password')
     role_id=RadioField('Label',choices=[('1','Dental Clinic'),('2','Dental Lab'),('3','Manufacturer')])
-    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice (updated Jan 21, 2015)', [validators.DataRequired()])
+    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice', [validators.DataRequired()])
 
 # ------------------ 18 April 2020--------------------------------
 class Addproducts_lab(Form):
