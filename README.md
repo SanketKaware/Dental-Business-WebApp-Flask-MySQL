@@ -1,6 +1,3 @@
-# Dental-Business-WebApp-Flask-MySQL
-An e-commerce web application that allows you to register as a dentist, dental lab, or manufacturer. The application lets you add, delete, and purchase products by using add to cart functionality.
-
 # Dental-Business Web Application
 Dental business web application written in Flask + MySQL + Bootstrap4
 
